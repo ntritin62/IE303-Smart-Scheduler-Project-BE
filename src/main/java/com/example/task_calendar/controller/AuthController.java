@@ -1,7 +1,9 @@
 package com.example.task_calendar.controller;
+import com.example.task_calendar.dto.CalendarDTO;
 import com.example.task_calendar.dto.LoginDTO;
 import com.example.task_calendar.dto.SignUpDTO;
 import com.example.task_calendar.dto.UserDTO;
+import com.example.task_calendar.entity.User;
 import com.example.task_calendar.exception.ApiRequestException;
 import com.example.task_calendar.response.ResponseHandler;
 import com.example.task_calendar.service.auth.AuthService;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,5 +82,11 @@ public class AuthController {
 
 
         return ResponseHandler.responseBuilder("Login successfully", HttpStatus.OK, responseMap);
+    }
+
+    @GetMapping("/api/user")
+    public ResponseEntity<?> getCurrentUser() {
+        User user = authService.getCurrentUser();
+        return ResponseHandler.responseBuilder("Get current user successfully", HttpStatus.OK, user);
     }
 }

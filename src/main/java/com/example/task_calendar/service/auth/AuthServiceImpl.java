@@ -5,6 +5,7 @@ import com.example.task_calendar.dto.SignUpDTO;
 import com.example.task_calendar.dto.UserDTO;
 import com.example.task_calendar.entity.User;
 import com.example.task_calendar.repository.UserRepository;
+import com.example.task_calendar.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserUtil userUtil;
 
     @Override
     public UserDTO createUser(SignUpDTO signupDTO) {
@@ -30,5 +34,11 @@ public class AuthServiceImpl implements AuthService {
         userDTO.setEmail(createdUser.getEmail());
         userDTO.setUserName(createdUser.getUserName());
         return userDTO;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());;
+        return user;
     }
 }

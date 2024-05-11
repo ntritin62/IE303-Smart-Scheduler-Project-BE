@@ -4,6 +4,7 @@ import com.example.task_calendar.dto.CalendarDTO;
 import com.example.task_calendar.dto.SignUpDTO;
 import com.example.task_calendar.dto.UserDTO;
 import com.example.task_calendar.entity.Calendar;
+import com.example.task_calendar.entity.User;
 import com.example.task_calendar.exception.ApiRequestException;
 import com.example.task_calendar.response.ResponseHandler;
 import com.example.task_calendar.service.calendar.CalendarService;
@@ -26,11 +27,13 @@ public class CalendarController {
 
     @PostMapping("/calendar")
     public ResponseEntity<?> addCalendar(@Valid @RequestBody CalendarDTO calendarDTO) {
-        System.out.println(123);
+
         Calendar calendar = calendarService.createCalendar(calendarDTO);
 
         return ResponseHandler.responseBuilder("Created calendar successfully", HttpStatus.OK, calendar);
 
     }
+
+
 
 }
