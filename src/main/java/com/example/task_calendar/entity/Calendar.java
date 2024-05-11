@@ -1,5 +1,6 @@
 package com.example.task_calendar.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,13 +12,14 @@ public class Calendar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "color")
+    private String color;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,CascadeType.REFRESH})
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties("calendars")
     private User user;
 }

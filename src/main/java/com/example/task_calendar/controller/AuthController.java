@@ -3,6 +3,7 @@ import com.example.task_calendar.dto.LoginDTO;
 import com.example.task_calendar.dto.SignUpDTO;
 import com.example.task_calendar.dto.UserDTO;
 import com.example.task_calendar.exception.ApiRequestException;
+import com.example.task_calendar.response.ResponseHandler;
 import com.example.task_calendar.service.auth.AuthService;
 import com.example.task_calendar.service.jwt.UserDetailsServiceImpl;
 import com.example.task_calendar.util.JwtUtil;
@@ -47,11 +48,11 @@ public class AuthController {
 
         UserDTO createdUser = authService.createUser(signupDTO);
         if (createdUser == null){
-
             throw new ApiRequestException("Email already exists");
 
         }
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+
+        return ResponseHandler.responseBuilder("Sign up successfully", HttpStatus.OK, createdUser);
     }
 
 
@@ -77,6 +78,6 @@ public class AuthController {
         responseMap.put("token", jwt);
 
 
-        return ResponseEntity.ok().body(responseMap);
+        return ResponseHandler.responseBuilder("Login successfully", HttpStatus.OK, responseMap);
     }
 }
