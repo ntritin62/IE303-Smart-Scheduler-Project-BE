@@ -1,6 +1,7 @@
 package com.example.task_calendar.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,6 +31,7 @@ public class User {
     @OneToMany(mappedBy = "user",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("tasks")
     private List<Calendar> calendars;
 
     public void add(Calendar tempCalendar) {

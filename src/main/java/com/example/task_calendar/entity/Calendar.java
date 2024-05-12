@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "calendar")
 @Data
@@ -23,4 +26,19 @@ public class Calendar {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "calendar",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<Task> tasks;
+
+    public void add(Task tempTask) {
+        if(tasks == null) {
+            tasks = new ArrayList<>();
+        }
+
+        tasks.add(tempTask);
+
+        tempTask.setCalendar(this);
+    }
 }
