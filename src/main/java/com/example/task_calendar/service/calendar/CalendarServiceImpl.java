@@ -9,6 +9,9 @@ import com.example.task_calendar.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 public class CalendarServiceImpl implements CalendarService{
 
@@ -41,5 +44,16 @@ public class CalendarServiceImpl implements CalendarService{
     @Override
     public void deleteCalendar(long calendarId) {
 
+    }
+
+    @Override
+    public List<Calendar> getUserCalendars() {
+        User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());
+        if (user != null) {
+            return calendarRepository.findByUserId(user.getId());
+        } else {
+
+            return Collections.emptyList();
+        }
     }
 }

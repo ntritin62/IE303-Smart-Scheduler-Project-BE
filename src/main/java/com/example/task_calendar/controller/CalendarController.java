@@ -18,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class CalendarController {
@@ -33,6 +35,18 @@ public class CalendarController {
         return ResponseHandler.responseBuilder("Created calendar successfully", HttpStatus.OK, calendar);
 
     }
+
+    @GetMapping("/calendar")
+    public ResponseEntity<?> getAllCalendarWithTasks() {
+
+        List<Calendar> calendars = calendarService.getUserCalendars();
+
+        return ResponseHandler.responseBuilder("Get All Calendar With Tasks successfully", HttpStatus.OK, calendars);
+
+    }
+
+
+
 
 
 
