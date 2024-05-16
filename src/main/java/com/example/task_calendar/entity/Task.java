@@ -27,6 +27,9 @@ public class Task {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @Column(name = "is_recurring")
+    private Boolean isRecurring;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "calendar_id")
     @JsonIgnore

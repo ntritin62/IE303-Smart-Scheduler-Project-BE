@@ -2,13 +2,23 @@ package com.example.task_calendar.service.calendar;
 
 import com.example.task_calendar.dto.CalendarDTO;
 import com.example.task_calendar.entity.Calendar;
+import com.example.task_calendar.entity.Task;
 import com.example.task_calendar.entity.User;
 import com.example.task_calendar.repository.CalendarRepository;
 import com.example.task_calendar.repository.UserRepository;
 import com.example.task_calendar.util.UserUtil;
+import org.dmfs.jems2.iterable.First;
+import org.dmfs.rfc5545.DateTime;
+import org.dmfs.rfc5545.RecurrenceSet;
+import org.dmfs.rfc5545.recur.InvalidRecurrenceRuleException;
+import org.dmfs.rfc5545.recur.RecurrenceRule;
+import org.dmfs.rfc5545.recur.RecurrenceRuleIterator;
+import org.dmfs.rfc5545.recurrenceset.OfRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,14 +56,47 @@ public class CalendarServiceImpl implements CalendarService{
 
     }
 
+
     @Override
     public List<Calendar> getUserCalendars() {
         User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());
         if (user != null) {
-            return calendarRepository.findByUserId(user.getId());
-        } else {
+            List<Calendar> calendars = calendarRepository.findByUserId(user.getId());
+            for (Calendar calendar : calendars) {
+                List<Task> tasks = calendar.getTasks();
+                List<Task> newTasks = new ArrayList<>(); // Danh sách tạm thời
 
+                for (Task task : tasks) {
+                    if (task.getIsRecurring()) {
+                        try {
+                            RecurrenceRule rule = new RecurrenceRule("FREQ=WEEKLY;BYDAY=MO");
+                            DateTime start = new DateTime(task.getStartTime().getYear(), task.getStartTime().getMonthValue() - 1, task.getStartTime().getDayOfMonth());
+                            System.out.println(start.getDayOfWeek());
+                            for (DateTime occurrence : new First<>(3, new OfRule(rule, start))) {
+                                Task tempTask = new Task();
+                                tempTask.setId(task.getId());
+                                tempTask.setTitle(task.getTitle());
+                                tempTask.setDescription(task.getDescription());
+                                LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth(), occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
+                                tempTask.setStartTime(startTime);
+                                LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth(), occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
+                                tempTask.setEndTime(endTime);
+                                tempTask.setIsRecurring(task.getIsRecurring());
+                                newTasks.add(tempTask);
+                            }
+                        } catch (InvalidRecurrenceRuleException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+
+
+                tasks.addAll(newTasks);
+            }
+            return calendars;
+        } else {
             return Collections.emptyList();
         }
     }
+
 }
