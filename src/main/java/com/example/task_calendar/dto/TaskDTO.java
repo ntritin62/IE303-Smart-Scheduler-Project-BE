@@ -16,5 +16,10 @@ public class TaskDTO {
     private String endTime;
     @NotNull(message = "calendarID cannot be null")
     private Long calendarId;
+    @NotNull(message = "isRecurring cannot be null")
+    private Boolean isRecurring;
+
+    private String recurrenceRule;
+
 
 }

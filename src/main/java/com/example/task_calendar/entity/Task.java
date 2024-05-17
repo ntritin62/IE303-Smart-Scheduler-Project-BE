@@ -30,6 +30,9 @@ public class Task {
     @Column(name = "is_recurring")
     private Boolean isRecurring;
 
+    @Column(name = "recurrence_rule")
+    private String recurrenceRule;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "calendar_id")
     @JsonIgnore

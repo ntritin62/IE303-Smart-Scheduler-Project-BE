@@ -9,5 +9,5 @@ public interface CalendarService {
     Calendar createCalendar(CalendarDTO calendarDTO);
 
     void deleteCalendar(long calendarId);
-    List<Calendar> getUserCalendars();
+    List<Calendar> getUserCalendars(int year, int month, int day);
 }

@@ -58,30 +58,30 @@ public class CalendarServiceImpl implements CalendarService{
 
 
     @Override
-    public List<Calendar> getUserCalendars() {
+    public List<Calendar> getUserCalendars(int year, int month, int day) {
         User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());
         if (user != null) {
             List<Calendar> calendars = calendarRepository.findByUserId(user.getId());
             for (Calendar calendar : calendars) {
                 List<Task> tasks = calendar.getTasks();
-                List<Task> newTasks = new ArrayList<>(); // Danh sách tạm thời
-
+                List<Task> newTasks = new ArrayList<>();
                 for (Task task : tasks) {
                     if (task.getIsRecurring()) {
                         try {
-                            RecurrenceRule rule = new RecurrenceRule("FREQ=WEEKLY;BYDAY=MO");
-                            DateTime start = new DateTime(task.getStartTime().getYear(), task.getStartTime().getMonthValue() - 1, task.getStartTime().getDayOfMonth());
-                            System.out.println(start.getDayOfWeek());
-                            for (DateTime occurrence : new First<>(3, new OfRule(rule, start))) {
+                            RecurrenceRule rule = new RecurrenceRule(task.getRecurrenceRule());
+                            DateTime start = new DateTime(year, month - 1, day);
+
+                            for (DateTime occurrence : new First<>(366, new OfRule(rule, start))) {
                                 Task tempTask = new Task();
                                 tempTask.setId(task.getId());
                                 tempTask.setTitle(task.getTitle());
                                 tempTask.setDescription(task.getDescription());
-                                LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth(), occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
+                                LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
                                 tempTask.setStartTime(startTime);
-                                LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth(), occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
+                                LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
                                 tempTask.setEndTime(endTime);
                                 tempTask.setIsRecurring(task.getIsRecurring());
+                                tempTask.setRecurrenceRule(task.getRecurrenceRule());
                                 newTasks.add(tempTask);
                             }
                         } catch (InvalidRecurrenceRuleException e) {
