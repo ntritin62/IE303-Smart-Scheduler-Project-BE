@@ -16,6 +16,7 @@ import org.dmfs.rfc5545.recur.RecurrenceRuleIterator;
 import org.dmfs.rfc5545.recurrenceset.OfRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.List;
 public class CalendarServiceImpl implements CalendarService{
 
     @Autowired
+
     private CalendarRepository calendarRepository;
 
     @Autowired
@@ -97,6 +99,40 @@ public class CalendarServiceImpl implements CalendarService{
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Calendar> getCalendars(int year, int month, int day) {
+        List<Calendar> calendars = calendarRepository.findAll();
+        for (Calendar calendar : calendars) {
+            List<Task> tasks = calendar.getTasks();
+            List<Task> newTasks = new ArrayList<>(); // Danh sách tạm thời để lưu các nhiệm vụ mới
+            for (Task task : tasks) {
+                if (task.getIsRecurring()) {
+                    try {
+                        RecurrenceRule rule = new RecurrenceRule(task.getRecurrenceRule());
+                        DateTime start = new DateTime(year, month - 1, day);
+                        for (DateTime occurrence : new First<>(366, new OfRule(rule, start))) {
+                            Task tempTask = new Task();
+                            tempTask.setId(task.getId());
+                            tempTask.setTitle(task.getTitle());
+                            tempTask.setDescription(task.getDescription());
+                            LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
+                            tempTask.setStartTime(startTime);
+                            LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
+                            tempTask.setEndTime(endTime);
+                            tempTask.setIsRecurring(task.getIsRecurring());
+                            tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                            newTasks.add(tempTask);
+                        }
+                    } catch (InvalidRecurrenceRuleException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            tasks.addAll(newTasks); // Thêm tất cả các nhiệm vụ mới vào danh sách `tasks` sau khi lặp xong
+        }
+        return calendars;
     }
 
 }

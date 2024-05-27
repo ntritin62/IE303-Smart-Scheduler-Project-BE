@@ -28,7 +28,6 @@ public class Calendar {
     private User user;
 
     @OneToMany(mappedBy = "calendar",
-            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private List<Task> tasks;
 
