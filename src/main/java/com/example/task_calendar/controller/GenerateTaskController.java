@@ -1,24 +1,26 @@
 package com.example.task_calendar.controller;
 
-import com.example.task_calendar.dto.GenerateTaskDTO.GenerateTaskReqDTO;
-import com.example.task_calendar.dto.GenerateTaskDTO.GenerateTaskResDTO;
-import com.example.task_calendar.service.generateTask.GenerateTaskService;
+import com.example.task_calendar.dto.GenerateTaskDTO.GenTaskRequest;
+import com.example.task_calendar.dto.GenerateTaskDTO.GenTaskResponse;
+import com.example.task_calendar.service.genTask.GenTaskService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
-@RequestMapping("/api/generate-calendar")
+@RequiredArgsConstructor
+@RequestMapping("/api/generate")
 public class GenerateTaskController {
 
-    @Autowired
-    private GenerateTaskService generateTaskService;
+    private final GenTaskService genTaskService;
 
-    @PostMapping("")
-    public GenerateTaskResDTO generateCalendar (@RequestBody GenerateTaskReqDTO requestCalendarDTO) {
-        return generateTaskService.generateCalendar(requestCalendarDTO);
+    @PostMapping("/task")
+    public GenTaskResponse generateTask(@RequestBody GenTaskRequest request) {
+        return genTaskService.generateTask(request);
     }
 }

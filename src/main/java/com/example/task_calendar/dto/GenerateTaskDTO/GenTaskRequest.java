@@ -1,9 +1,10 @@
 package com.example.task_calendar.dto.GenerateTaskDTO;
 
-public record GenerateTaskReqDTO(
+public record GenTaskRequest(
+        Integer userId,
         String title,
         Integer estimatedTime,
-        String calendarName,
+        Integer calendarId,
         Repeat repeat,
         String description
 ) {

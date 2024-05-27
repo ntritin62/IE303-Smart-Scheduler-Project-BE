@@ -39,7 +39,6 @@ public class CalendarController {
         Calendar calendar = calendarService.createCalendar(calendarDTO);
 
         return ResponseHandler.responseBuilder("Created calendar successfully", HttpStatus.OK, calendar);
-
     }
 
 //    @GetMapping("/calendar")
@@ -56,12 +55,12 @@ public class CalendarController {
 
         List<Calendar> calendars = new ArrayList<>();
         LocalDateTime date = LocalDateTime.of(year, month, day, 0, 0);
-        switch(type) {
+        switch (type) {
             case "week":
                 LocalDateTime startOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
                 LocalDateTime endOfWeek = date.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).withHour(23).withMinute(59);
                 calendars = calendarService.getUserCalendars(startOfWeek.getYear(), startOfWeek.getMonthValue(), startOfWeek.getDayOfMonth());
-                for(Calendar calendar : calendars) {
+                for (Calendar calendar : calendars) {
                     List<Task> filteredTasks = calendar.getTasks().stream()
                             .filter(task -> {
                                 LocalDateTime dateTime = task.getStartTime();
