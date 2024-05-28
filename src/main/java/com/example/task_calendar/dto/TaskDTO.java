@@ -46,6 +46,9 @@ public class TaskDTO {
                 rule = rule + "YEARLY;BYMONTHDAY=" + DateUtil.parseStringToLocalDateTime(this.getStartTime()).getDayOfMonth() + ";BYMONTH=" + DateUtil.parseStringToLocalDateTime(this.getStartTime()).getMonthValue();
                 break;
         }
+        if(this.repeat.getRepeatGap() != null) {
+            rule= rule + ";INTERVAL=" + this.getRepeat().getRepeatGap() + 1;
+        }
         this.recurrenceRule = rule;
     }
 }
