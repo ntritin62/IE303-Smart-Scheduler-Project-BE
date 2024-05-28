@@ -67,7 +67,6 @@ public class CalendarServiceImpl implements CalendarService{
         User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());
         if (user != null) {
             List<Calendar> calendars = calendarRepository.findByUserId(user.getId());
-
             for (Calendar calendar : calendars) {
                 List<Task> tasks = calendar.getTasks();
                 List<Task> newTasks = new ArrayList<>();
@@ -79,7 +78,6 @@ public class CalendarServiceImpl implements CalendarService{
                             DateTime start = new DateTime(year, month - 1, day);
                             if(task.getEndDate() != null) {
                                 DateTime end = new DateTime(task.getEndDate().getYear(), task.getEndDate().getMonthValue() - 1, task.getEndDate().getDayOfMonth());
-
                                 for (DateTime occurrence : new Preceding(end, new OfRule(rule, start))) {
                                     Task tempTask = new Task();
                                     tempTask.setId(task.getId());
@@ -91,6 +89,9 @@ public class CalendarServiceImpl implements CalendarService{
                                     tempTask.setEndTime(endTime);
                                     tempTask.setIsRecurring(task.getIsRecurring());
                                     tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                    tempTask.setEndDate(task.getEndDate());
+                                    tempTask.setRepeatGap(task.getRepeatGap());
+                                    tempTask.setCalendar(task.getCalendar());
                                     newTasks.add(tempTask);
                                 }
                             } else {
@@ -105,6 +106,9 @@ public class CalendarServiceImpl implements CalendarService{
                                     tempTask.setEndTime(endTime);
                                     tempTask.setIsRecurring(task.getIsRecurring());
                                     tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                    tempTask.setEndDate(task.getEndDate());
+                                    tempTask.setRepeatGap(task.getRepeatGap());
+                                    tempTask.setCalendar(task.getCalendar());
                                     newTasks.add(tempTask);
                                 }
                             }
@@ -148,6 +152,9 @@ public class CalendarServiceImpl implements CalendarService{
                                 tempTask.setEndTime(endTime);
                                 tempTask.setIsRecurring(task.getIsRecurring());
                                 tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                tempTask.setEndDate(task.getEndDate());
+                                tempTask.setRepeatGap(task.getRepeatGap());
+                                tempTask.setCalendar(task.getCalendar());
                                 newTasks.add(tempTask);
                             }
                         } else {
@@ -162,6 +169,9 @@ public class CalendarServiceImpl implements CalendarService{
                                     tempTask.setEndTime(endTime);
                                     tempTask.setIsRecurring(task.getIsRecurring());
                                     tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                    tempTask.setEndDate(task.getEndDate());
+                                    tempTask.setRepeatGap(task.getRepeatGap());
+                                    tempTask.setCalendar(task.getCalendar());
                                     newTasks.add(tempTask);
                                 }
                         }

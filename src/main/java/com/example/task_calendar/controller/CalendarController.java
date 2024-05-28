@@ -23,6 +23,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,14 +42,7 @@ public class CalendarController {
         return ResponseHandler.responseBuilder("Created calendar successfully", HttpStatus.OK, calendar);
     }
 
-//    @GetMapping("/calendar")
-//    public ResponseEntity<?> getAllCalendarWithTasks() {
-//
-//        List<Calendar> calendars = calendarService.getUserCalendars();
-//
-//        return ResponseHandler.responseBuilder("Get All Calendar With Tasks successfully", HttpStatus.OK, calendars);
-//
-//    }
+
 
     @GetMapping("/calendar/{type}/{year}/{month}/{day}")
     public ResponseEntity<?> getCalendarWithTasks(@PathVariable String type, @PathVariable int year, @PathVariable int month, @PathVariable int day) {
@@ -66,7 +60,7 @@ public class CalendarController {
                                 LocalDateTime dateTime = task.getStartTime();
                                 return dateTime.isEqual(startOfWeek) || dateTime.isEqual(endOfWeek) ||
                                         (dateTime.isAfter(startOfWeek) && dateTime.isBefore(endOfWeek));
-                            })
+                            }).sorted(Comparator.comparing(Task::getStartTime))
                             .collect(Collectors.toList());
                     calendar.setTasks(filteredTasks);
                 }
@@ -81,7 +75,7 @@ public class CalendarController {
                                 LocalDateTime dateTime = task.getStartTime();
                                 return dateTime.isEqual(startOfMonth) || dateTime.isEqual(endOfMonth) ||
                                         (dateTime.isAfter(startOfMonth) && dateTime.isBefore(endOfMonth));
-                            })
+                            }).sorted(Comparator.comparing(Task::getStartTime))
                             .collect(Collectors.toList());
                     calendar.setTasks(filteredTasks);
                 }
@@ -96,8 +90,9 @@ public class CalendarController {
                                 LocalDateTime dateTime = task.getStartTime();
                                 return dateTime.isEqual(startOfDay) || dateTime.isEqual(endOfDay) ||
                                         (dateTime.isAfter(startOfDay) && dateTime.isBefore(endOfDay));
-                            })
+                            }).sorted(Comparator.comparing(Task::getStartTime))
                             .collect(Collectors.toList());
+
                     calendar.setTasks(filteredTasks);
                 }
                 break;
@@ -112,7 +107,7 @@ public class CalendarController {
                                 LocalDateTime dateTime = task.getStartTime();
                                 return dateTime.isEqual(startOfYear) || dateTime.isEqual(endOfYear) ||
                                         (dateTime.isAfter(startOfYear) && dateTime.isBefore(endOfYear));
-                            })
+                            }).sorted(Comparator.comparing(Task::getStartTime))
                             .collect(Collectors.toList());
                     calendar.setTasks(filteredTasks);
                 }
