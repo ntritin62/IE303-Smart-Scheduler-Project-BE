@@ -41,6 +41,9 @@ public class TaskServiceImpl implements TaskService{
             LocalDateTime endTime = DateUtil.parseStringToLocalDateTime(taskDTO.getEndTime());
             task.setEndTime(endTime);
             task.setIsRecurring(taskDTO.getIsRecurring());
+            if(taskDTO.getIsRecurring()) {
+                taskDTO.createRecurrenceRule();
+            }
             task.setRecurrenceRule(taskDTO.getRecurrenceRule());
             task.setCalendar(calendar);
 

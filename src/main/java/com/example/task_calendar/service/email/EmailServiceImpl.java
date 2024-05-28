@@ -31,7 +31,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     public void sendEmail(String email, String subject, String body){
-        System.out.println(123);
         SimpleMailMessage mailMsg = new SimpleMailMessage();
         mailMsg.setFrom(emailSender);
         mailMsg.setTo(email);
