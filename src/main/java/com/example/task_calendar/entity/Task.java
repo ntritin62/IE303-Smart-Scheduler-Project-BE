@@ -33,6 +33,12 @@ public class Task {
     @Column(name = "recurrence_rule")
     private String recurrenceRule;
 
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
+
+    @Column(name = "repeat_gap")
+    private Long repeatGap;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "calendar_id")
     @JsonIgnore

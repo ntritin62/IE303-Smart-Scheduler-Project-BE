@@ -11,7 +11,7 @@ public class RepeatDTO {
 
     private List<String> dayOfWeek;
 
-    private int repeatGap;
+    private Long repeatGap;
 
     private String endDate;
 }

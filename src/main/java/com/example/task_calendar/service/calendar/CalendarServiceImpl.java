@@ -7,13 +7,16 @@ import com.example.task_calendar.entity.User;
 import com.example.task_calendar.repository.CalendarRepository;
 import com.example.task_calendar.repository.UserRepository;
 import com.example.task_calendar.util.UserUtil;
+import org.dmfs.jems2.Predicate;
 import org.dmfs.jems2.iterable.First;
+import org.dmfs.jems2.iterator.While;
 import org.dmfs.rfc5545.DateTime;
 import org.dmfs.rfc5545.RecurrenceSet;
 import org.dmfs.rfc5545.recur.InvalidRecurrenceRuleException;
 import org.dmfs.rfc5545.recur.RecurrenceRule;
 import org.dmfs.rfc5545.recur.RecurrenceRuleIterator;
 import org.dmfs.rfc5545.recurrenceset.OfRule;
+import org.dmfs.rfc5545.recurrenceset.Preceding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,35 +67,53 @@ public class CalendarServiceImpl implements CalendarService{
         User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());
         if (user != null) {
             List<Calendar> calendars = calendarRepository.findByUserId(user.getId());
+
             for (Calendar calendar : calendars) {
                 List<Task> tasks = calendar.getTasks();
                 List<Task> newTasks = new ArrayList<>();
+
                 for (Task task : tasks) {
                     if (task.getIsRecurring()) {
                         try {
                             RecurrenceRule rule = new RecurrenceRule(task.getRecurrenceRule());
                             DateTime start = new DateTime(year, month - 1, day);
+                            if(task.getEndDate() != null) {
+                                DateTime end = new DateTime(task.getEndDate().getYear(), task.getEndDate().getMonthValue() - 1, task.getEndDate().getDayOfMonth());
 
-                            for (DateTime occurrence : new First<>(366, new OfRule(rule, start))) {
-                                Task tempTask = new Task();
-                                tempTask.setId(task.getId());
-                                tempTask.setTitle(task.getTitle());
-                                tempTask.setDescription(task.getDescription());
-                                LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
-                                tempTask.setStartTime(startTime);
-                                LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
-                                tempTask.setEndTime(endTime);
-                                tempTask.setIsRecurring(task.getIsRecurring());
-                                tempTask.setRecurrenceRule(task.getRecurrenceRule());
-                                newTasks.add(tempTask);
+                                for (DateTime occurrence : new Preceding(end, new OfRule(rule, start))) {
+                                    Task tempTask = new Task();
+                                    tempTask.setId(task.getId());
+                                    tempTask.setTitle(task.getTitle());
+                                    tempTask.setDescription(task.getDescription());
+                                    LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
+                                    tempTask.setStartTime(startTime);
+                                    LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
+                                    tempTask.setEndTime(endTime);
+                                    tempTask.setIsRecurring(task.getIsRecurring());
+                                    tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                    newTasks.add(tempTask);
+                                }
+                            } else {
+                                for (DateTime occurrence : new First<>(366, new OfRule(rule, start))) {
+                                    Task tempTask = new Task();
+                                    tempTask.setId(task.getId());
+                                    tempTask.setTitle(task.getTitle());
+                                    tempTask.setDescription(task.getDescription());
+                                    LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
+                                    tempTask.setStartTime(startTime);
+                                    LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
+                                    tempTask.setEndTime(endTime);
+                                    tempTask.setIsRecurring(task.getIsRecurring());
+                                    tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                    newTasks.add(tempTask);
+                                }
                             }
+
                         } catch (InvalidRecurrenceRuleException e) {
                             throw new RuntimeException(e);
                         }
                     }
                 }
-
-
                 tasks.addAll(newTasks);
             }
             return calendars;
@@ -106,31 +127,51 @@ public class CalendarServiceImpl implements CalendarService{
         List<Calendar> calendars = calendarRepository.findAll();
         for (Calendar calendar : calendars) {
             List<Task> tasks = calendar.getTasks();
-            List<Task> newTasks = new ArrayList<>(); // Danh sách tạm thời để lưu các nhiệm vụ mới
+            List<Task> newTasks = new ArrayList<>();
+
             for (Task task : tasks) {
                 if (task.getIsRecurring()) {
                     try {
                         RecurrenceRule rule = new RecurrenceRule(task.getRecurrenceRule());
                         DateTime start = new DateTime(year, month - 1, day);
-                        for (DateTime occurrence : new First<>(366, new OfRule(rule, start))) {
-                            Task tempTask = new Task();
-                            tempTask.setId(task.getId());
-                            tempTask.setTitle(task.getTitle());
-                            tempTask.setDescription(task.getDescription());
-                            LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
-                            tempTask.setStartTime(startTime);
-                            LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
-                            tempTask.setEndTime(endTime);
-                            tempTask.setIsRecurring(task.getIsRecurring());
-                            tempTask.setRecurrenceRule(task.getRecurrenceRule());
-                            newTasks.add(tempTask);
+                        if(task.getEndDate() != null) {
+                            DateTime end = new DateTime(task.getEndDate().getYear(), task.getEndDate().getMonthValue() - 1, task.getEndDate().getDayOfMonth());
+
+                            for (DateTime occurrence : new Preceding(end, new OfRule(rule, start))) {
+                                Task tempTask = new Task();
+                                tempTask.setId(task.getId());
+                                tempTask.setTitle(task.getTitle());
+                                tempTask.setDescription(task.getDescription());
+                                LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
+                                tempTask.setStartTime(startTime);
+                                LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
+                                tempTask.setEndTime(endTime);
+                                tempTask.setIsRecurring(task.getIsRecurring());
+                                tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                newTasks.add(tempTask);
+                            }
+                        } else {
+                                for (DateTime occurrence : new First<>(366, new OfRule(rule, start))) {
+                                    Task tempTask = new Task();
+                                    tempTask.setId(task.getId());
+                                    tempTask.setTitle(task.getTitle());
+                                    tempTask.setDescription(task.getDescription());
+                                    LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
+                                    tempTask.setStartTime(startTime);
+                                    LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
+                                    tempTask.setEndTime(endTime);
+                                    tempTask.setIsRecurring(task.getIsRecurring());
+                                    tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                    newTasks.add(tempTask);
+                                }
                         }
+
                     } catch (InvalidRecurrenceRuleException e) {
                         throw new RuntimeException(e);
                     }
                 }
             }
-            tasks.addAll(newTasks); // Thêm tất cả các nhiệm vụ mới vào danh sách `tasks` sau khi lặp xong
+            tasks.addAll(newTasks);
         }
         return calendars;
     }

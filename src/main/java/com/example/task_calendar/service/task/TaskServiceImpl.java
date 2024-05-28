@@ -43,8 +43,13 @@ public class TaskServiceImpl implements TaskService{
             task.setIsRecurring(taskDTO.getIsRecurring());
             if(taskDTO.getIsRecurring()) {
                 taskDTO.createRecurrenceRule();
+                task.setRecurrenceRule(taskDTO.getRecurrenceRule());
+                if(taskDTO.getRepeat().getEndDate() != null) {
+                    LocalDateTime endDate = DateUtil.parseStringToLocalDateTime(taskDTO.getRepeat().getEndDate());
+                    task.setEndDate(endDate);
+                }
+                task.setRepeatGap(taskDTO.getRepeat().getRepeatGap());
             }
-            task.setRecurrenceRule(taskDTO.getRecurrenceRule());
             task.setCalendar(calendar);
 
             Task createdTask = taskRepository.save(task);
