@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleEmailServiceImpl implements ScheduleEmailService{
 
-
     @Autowired
     private CalendarService calendarService;
 
@@ -27,7 +26,7 @@ public class ScheduleEmailServiceImpl implements ScheduleEmailService{
     @Scheduled(fixedRate = 60000)
     @Transactional(readOnly = true)
     public void checkToSendEmail() {
-        System.out.println(123);
+
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfDay = now.withHour(0).withMinute(0);
         LocalDateTime endOfDay = now.withHour(23).withMinute(59);
@@ -47,7 +46,7 @@ public class ScheduleEmailServiceImpl implements ScheduleEmailService{
 
         for (Calendar calendar : calendars) {
             String recipientEmail =  calendar.getUser().getEmail();
-
+            System.out.println(recipientEmail);
             for (Task event : calendar.getTasks()) {
                 long minutesUntilEvent = ChronoUnit.MINUTES.between(now, event.getStartTime());
                 if (minutesUntilEvent == 30) {

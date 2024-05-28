@@ -29,17 +29,17 @@ public class EmailServiceImpl implements EmailService {
     CalendarService calendarService;
 
     public void sendEmail(String email, String subject, String body){
+        System.out.println(123);
+        SimpleMailMessage mailMsg = new SimpleMailMessage();
+        mailMsg.setFrom(emailSender);
+        mailMsg.setTo(email);
+        mailMsg.setSubject(subject);
+        mailMsg.setText(body);
         try {
-            SimpleMailMessage mailMsg = new SimpleMailMessage();
-            mailMsg.setFrom(emailSender);
-            mailMsg.setTo(email);
-            mailMsg.setText(body);
-            mailMsg.setSubject(subject);
             javaMailSender.send(mailMsg);
-
-        }catch (MailException exception){
-            System.out.println("Failure occurred while sending email");
-
+            System.out.println("Email sent successfully.");
+        } catch (MailException e) {
+            System.err.println("Error sending email: " + e.getMessage());
         }
     }
 
