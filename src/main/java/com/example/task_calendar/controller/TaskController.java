@@ -31,11 +31,16 @@ public class TaskController {
         }
 
         return ResponseHandler.responseBuilder("Created task successfully", HttpStatus.OK, task);
-
-
     }
 
-
+    @DeleteMapping("/task/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+        Task task  = taskService.deleteTask(id);
+        if(task == null) {
+            throw new ApiRequestException("taskId doesn't exist.");
+        }
+        return ResponseHandler.responseBuilder("Deleted task with id= " + task.getId() + "successfully", HttpStatus.OK, null);
+    }
 
 
 }

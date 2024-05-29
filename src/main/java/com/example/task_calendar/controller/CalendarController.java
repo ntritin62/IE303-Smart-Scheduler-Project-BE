@@ -48,7 +48,7 @@ public class CalendarController {
         if(calendar == null) {
             throw new ApiRequestException("calendarID doesn't exist.");
         }
-        return ResponseHandler.responseBuilder("Deleted calendar successfully", HttpStatus.OK, calendar);
+        return ResponseHandler.responseBuilder("Deleted calendar with id= " +calendar.getId() + " successfully", HttpStatus.OK, null);
     }
 
     @GetMapping("/calendar/{type}/{year}/{month}/{day}")

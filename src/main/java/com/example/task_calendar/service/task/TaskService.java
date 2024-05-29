@@ -7,4 +7,6 @@ import com.example.task_calendar.entity.Task;
 
 public interface TaskService {
     Task createTask(TaskDTO taskDTO);
+
+    Task deleteTask(Long id);
 }
