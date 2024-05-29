@@ -13,4 +13,6 @@ public interface CalendarService {
     void deleteCalendar(long calendarId);
     List<Calendar> getUserCalendars(int year, int month, int day);
     List<Calendar> getCalendars(int year, int month, int day);
+
+    Calendar deleteCalendar(Long id);
 }

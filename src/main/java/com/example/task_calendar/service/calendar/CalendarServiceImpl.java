@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CalendarServiceImpl implements CalendarService{
@@ -184,6 +185,17 @@ public class CalendarServiceImpl implements CalendarService{
             tasks.addAll(newTasks);
         }
         return calendars;
+    }
+
+    @Override
+    public Calendar deleteCalendar(Long id) {
+        Optional<Calendar> calendarOptional = calendarRepository.findById(id);
+        if (calendarOptional.isPresent()) {
+            calendarRepository.deleteById(id);
+            return calendarOptional.get();
+        } else {
+            return null;
+        }
     }
 
 }

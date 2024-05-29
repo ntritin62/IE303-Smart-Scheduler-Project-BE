@@ -42,7 +42,14 @@ public class CalendarController {
         return ResponseHandler.responseBuilder("Created calendar successfully", HttpStatus.OK, calendar);
     }
 
-
+    @DeleteMapping("/calendar/{id}")
+    public ResponseEntity<?> deleteCalendar(@PathVariable Long id) {
+        Calendar calendar  = calendarService.deleteCalendar(id);
+        if(calendar == null) {
+            throw new ApiRequestException("calendarID doesn't exist.");
+        }
+        return ResponseHandler.responseBuilder("Deleted calendar successfully", HttpStatus.OK, calendar);
+    }
 
     @GetMapping("/calendar/{type}/{year}/{month}/{day}")
     public ResponseEntity<?> getCalendarWithTasks(@PathVariable String type, @PathVariable int year, @PathVariable int month, @PathVariable int day) {
