@@ -92,6 +92,8 @@ public class CalendarServiceImpl implements CalendarService{
                                     tempTask.setRecurrenceRule(task.getRecurrenceRule());
                                     tempTask.setEndDate(task.getEndDate());
                                     tempTask.setRepeatGap(task.getRepeatGap());
+                                    tempTask.setNotificationNumber(task.getNotificationNumber());
+                                    tempTask.setNotificationType(task.getNotificationType());
                                     tempTask.setCalendar(task.getCalendar());
                                     newTasks.add(tempTask);
                                 }
@@ -109,6 +111,8 @@ public class CalendarServiceImpl implements CalendarService{
                                     tempTask.setRecurrenceRule(task.getRecurrenceRule());
                                     tempTask.setEndDate(task.getEndDate());
                                     tempTask.setRepeatGap(task.getRepeatGap());
+                                    tempTask.setNotificationNumber(task.getNotificationNumber());
+                                    tempTask.setNotificationType(task.getNotificationType());
                                     tempTask.setCalendar(task.getCalendar());
                                     newTasks.add(tempTask);
                                 }
@@ -155,6 +159,8 @@ public class CalendarServiceImpl implements CalendarService{
                                 tempTask.setRecurrenceRule(task.getRecurrenceRule());
                                 tempTask.setEndDate(task.getEndDate());
                                 tempTask.setRepeatGap(task.getRepeatGap());
+                                tempTask.setNotificationNumber(task.getNotificationNumber());
+                                tempTask.setNotificationType(task.getNotificationType());
                                 tempTask.setCalendar(task.getCalendar());
                                 newTasks.add(tempTask);
                             }
@@ -172,6 +178,8 @@ public class CalendarServiceImpl implements CalendarService{
                                     tempTask.setRecurrenceRule(task.getRecurrenceRule());
                                     tempTask.setEndDate(task.getEndDate());
                                     tempTask.setRepeatGap(task.getRepeatGap());
+                                    tempTask.setNotificationNumber(task.getNotificationNumber());
+                                    tempTask.setNotificationType(task.getNotificationType());
                                     tempTask.setCalendar(task.getCalendar());
                                     newTasks.add(tempTask);
                                 }

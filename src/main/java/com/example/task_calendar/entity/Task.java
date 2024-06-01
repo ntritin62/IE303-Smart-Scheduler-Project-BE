@@ -40,6 +40,12 @@ public class Task {
     @Column(name = "repeat_gap")
     private Long repeatGap;
 
+    @Column(name = "notification_type")
+    private String notificationType;
+
+    @Column(name = "notification_number")
+    private int notificationNumber;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,CascadeType.REFRESH})
     @JoinColumn(name = "calendar_id")
     @JsonIgnoreProperties("tasks")

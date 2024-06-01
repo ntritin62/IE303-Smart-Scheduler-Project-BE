@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class TaskDTO {
+
     @NotBlank(message = "Title cannot be blank")
     private String title;
     @NotBlank(message = "Description cannot be blank")
@@ -23,6 +24,7 @@ public class TaskDTO {
     private Boolean isRecurring;
     private String recurrenceRule;
     private RepeatDTO repeat;
+    private NotificationDTO notification;
 
     public void createRecurrenceRule() {
         String rule="FREQ=";

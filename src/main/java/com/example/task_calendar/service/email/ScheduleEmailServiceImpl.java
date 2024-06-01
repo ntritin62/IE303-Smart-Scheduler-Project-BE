@@ -2,6 +2,7 @@ package com.example.task_calendar.service.email;
 
 import com.example.task_calendar.entity.Calendar;
 import com.example.task_calendar.entity.Task;
+import com.example.task_calendar.repository.CalendarRepository;
 import com.example.task_calendar.service.calendar.CalendarService;
 import com.example.task_calendar.service.calendar.CalendarServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,35 +23,49 @@ public class ScheduleEmailServiceImpl implements ScheduleEmailService{
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private CalendarRepository calendarRepository;
     @Override
     @Scheduled(fixedRate = 60000)
     @Transactional(readOnly = true)
     public void checkToSendEmail() {
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startOfDay = now.withHour(0).withMinute(0);
-        LocalDateTime endOfDay = now.withHour(23).withMinute(59);
 
+        List<Calendar> calendars= calendarRepository.findAll();
 
-        List<Calendar> calendars = calendarService.getCalendars(startOfDay.getYear(), startOfDay.getMonthValue(), startOfDay.getDayOfMonth());
-        for (Calendar calendar : calendars) {
-            List<Task> filteredTasks = calendar.getTasks().stream()
-                    .filter(task -> {
-                        LocalDateTime dateTime = task.getStartTime();
-                        return dateTime.isEqual(startOfDay) || dateTime.isEqual(endOfDay) ||
-                                (dateTime.isAfter(startOfDay) && dateTime.isBefore(endOfDay));
-                    })
-                    .collect(Collectors.toList());
-            calendar.setTasks(filteredTasks);
-        }
 
         for (Calendar calendar : calendars) {
+
             String recipientEmail =  calendar.getUser().getEmail();
-            System.out.println(recipientEmail);
+
             for (Task event : calendar.getTasks()) {
+
+                String msg = "This is a reminder for your task in "+ event.getNotificationNumber();
                 long minutesUntilEvent = ChronoUnit.MINUTES.between(now, event.getStartTime());
-                if (minutesUntilEvent == 30) {
-                    emailService.sendEmail(recipientEmail, "Reminder", "This is a reminder for your task in 30 minutes.");
+                long minutes = 0;
+
+                switch(event.getNotificationType()) {
+                    case "day":
+                        minutes = event.getNotificationNumber() * 24 * 60;
+                        msg = msg + " days";
+                        break;
+
+                    case "hour":
+                        minutes = event.getNotificationNumber() * 60;
+                        msg = msg + " hours";
+                        break;
+
+                    case "minute":
+                        minutes = event.getNotificationNumber();
+                        msg = msg + " minutes";
+                        break;
+
+                }
+
+                if (minutesUntilEvent == minutes) {
+                    emailService.sendEmail(recipientEmail, "Reminder", msg);
                 }
             }
         }
