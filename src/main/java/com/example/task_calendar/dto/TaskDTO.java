@@ -49,7 +49,7 @@ public class TaskDTO {
                 break;
         }
         if(this.repeat.getRepeatGap() != null) {
-            rule= rule + ";INTERVAL=" + this.getRepeat().getRepeatGap() + 1;
+            rule= rule + ";INTERVAL=" + (this.getRepeat().getRepeatGap() + 1);
         }
         this.recurrenceRule = rule;
     }
