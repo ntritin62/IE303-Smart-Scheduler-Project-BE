@@ -12,24 +12,18 @@ public class TaskDTO {
 
     @NotBlank(message = "Title cannot be blank")
     private String title;
-
     @NotBlank(message = "Description cannot be blank")
     private String description;
-
     @NotBlank(message = "startTime cannot be blank")
     private String startTime;
-
     @NotBlank(message = "endTime cannot be blank")
     private String endTime;
-
     @NotNull(message = "calendarID cannot be null")
     private Long calendarId;
-
     @NotNull(message = "isRecurring cannot be null")
     private Boolean isRecurring;
-
+    private String recurrenceRule;
     private RepeatDTO repeat;
-
     private NotificationDTO notification;
 
     public void createRecurrenceRule() {
