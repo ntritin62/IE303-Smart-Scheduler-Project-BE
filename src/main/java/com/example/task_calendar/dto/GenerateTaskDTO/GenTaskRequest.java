@@ -6,7 +6,6 @@ public record GenTaskRequest(
         Integer calendarId,
         Repeat repeat,
         String description,
-        String appliedDate,
         String[] existTimes,
         boolean isRecurring,
         Notification notification
