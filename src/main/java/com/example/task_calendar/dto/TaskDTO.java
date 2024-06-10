@@ -47,6 +47,11 @@ public class TaskDTO {
             case "year":
                 rule = rule + "YEARLY;BYMONTHDAY=" + DateUtil.parseStringToLocalDateTime(this.getStartTime()).getDayOfMonth() + ";BYMONTH=" + DateUtil.parseStringToLocalDateTime(this.getStartTime()).getMonthValue();
                 break;
+            case "day":
+                rule = rule + "DAILY";
+                break;
+
+
         }
         if(this.repeat.getRepeatGap() != null) {
             rule= rule + ";INTERVAL=" + (this.getRepeat().getRepeatGap() + 1);
