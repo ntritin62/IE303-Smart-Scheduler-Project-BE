@@ -45,20 +45,20 @@ public class CalendarController {
 
     @DeleteMapping("/calendar/{id}")
     public ResponseEntity<?> deleteCalendar(@PathVariable Long id) {
-        Calendar calendar  = calendarService.deleteCalendar(id);
-        if(calendar == null) {
+        Calendar calendar = calendarService.deleteCalendar(id);
+        if (calendar == null) {
             throw new ApiRequestException("calendarID doesn't exist.");
         }
-        return ResponseHandler.responseBuilder("Deleted calendar with id= " +calendar.getId() + " successfully", HttpStatus.OK, null);
+        return ResponseHandler.responseBuilder("Deleted calendar with id= " + calendar.getId() + " successfully", HttpStatus.OK, null);
     }
 
     @PatchMapping("/calendar/{id}")
-    public ResponseEntity<?> updateCalendar(@PathVariable Long id, @RequestBody  CalendarDTO calendarDTO) {
-        Calendar calendar  = calendarService.updateCalendar(id, calendarDTO);
-        if(calendar == null) {
+    public ResponseEntity<?> updateCalendar(@PathVariable Long id, @RequestBody CalendarDTO calendarDTO) {
+        Calendar calendar = calendarService.updateCalendar(id, calendarDTO);
+        if (calendar == null) {
             throw new ApiRequestException("calendarID doesn't exist.");
         }
-        return ResponseHandler.responseBuilder("Updated calendar with id= " +calendar.getId() + " successfully", HttpStatus.OK, null);
+        return ResponseHandler.responseBuilder("Updated calendar with id= " + calendar.getId() + " successfully", HttpStatus.OK, null);
     }
 
     @GetMapping("/calendar/{type}/{year}/{month}/{day}")
@@ -136,4 +136,9 @@ public class CalendarController {
         return ResponseHandler.responseBuilder("Get All Calendar With Tasks successfully", HttpStatus.OK, calendars);
     }
 
+    @GetMapping("/calendars")
+    public ResponseEntity<?> getCalendarInfo() {
+        List<Calendar> calendars = calendarService.getCalendarInfo();
+        return ResponseHandler.responseBuilder("Get all calendar info successfully", HttpStatus.OK, calendars);
+    }
 }
