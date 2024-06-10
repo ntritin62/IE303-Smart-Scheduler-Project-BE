@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CalendarServiceImpl implements CalendarService{
+public class CalendarServiceImpl implements CalendarService {
 
     @Autowired
 
@@ -78,7 +78,7 @@ public class CalendarServiceImpl implements CalendarService{
                         try {
                             RecurrenceRule rule = new RecurrenceRule(task.getRecurrenceRule());
                             DateTime start = new DateTime(year, month - 1, day);
-                            if(task.getEndDate() != null) {
+                            if (task.getEndDate() != null) {
                                 DateTime end = new DateTime(task.getEndDate().getYear(), task.getEndDate().getMonthValue() - 1, task.getEndDate().getDayOfMonth());
                                 for (DateTime occurrence : new Preceding(end, new OfRule(rule, start))) {
                                     Task tempTask = new Task();
@@ -144,7 +144,7 @@ public class CalendarServiceImpl implements CalendarService{
                     try {
                         RecurrenceRule rule = new RecurrenceRule(task.getRecurrenceRule());
                         DateTime start = new DateTime(year, month - 1, day);
-                        if(task.getEndDate() != null) {
+                        if (task.getEndDate() != null) {
                             DateTime end = new DateTime(task.getEndDate().getYear(), task.getEndDate().getMonthValue() - 1, task.getEndDate().getDayOfMonth());
 
                             for (DateTime occurrence : new Preceding(end, new OfRule(rule, start))) {
@@ -166,24 +166,24 @@ public class CalendarServiceImpl implements CalendarService{
                                 newTasks.add(tempTask);
                             }
                         } else {
-                                for (DateTime occurrence : new First<>(366, new OfRule(rule, start))) {
-                                    Task tempTask = new Task();
-                                    tempTask.setId(task.getId());
-                                    tempTask.setTitle(task.getTitle());
-                                    tempTask.setDescription(task.getDescription());
-                                    LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
-                                    tempTask.setStartTime(startTime);
-                                    LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
-                                    tempTask.setEndTime(endTime);
-                                    tempTask.setIsRecurring(task.getIsRecurring());
-                                    tempTask.setRecurrenceRule(task.getRecurrenceRule());
-                                    tempTask.setEndDate(task.getEndDate());
-                                    tempTask.setRepeatGap(task.getRepeatGap());
-                                    tempTask.setNotificationNumber(task.getNotificationNumber());
-                                    tempTask.setNotificationType(task.getNotificationType());
-                                    tempTask.setCalendar(task.getCalendar());
-                                    newTasks.add(tempTask);
-                                }
+                            for (DateTime occurrence : new First<>(366, new OfRule(rule, start))) {
+                                Task tempTask = new Task();
+                                tempTask.setId(task.getId());
+                                tempTask.setTitle(task.getTitle());
+                                tempTask.setDescription(task.getDescription());
+                                LocalDateTime startTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getStartTime().getHour(), task.getStartTime().getMinute());
+                                tempTask.setStartTime(startTime);
+                                LocalDateTime endTime = LocalDateTime.of(occurrence.getYear(), occurrence.getMonth() + 1, occurrence.getDayOfMonth(), task.getEndTime().getHour(), task.getEndTime().getMinute());
+                                tempTask.setEndTime(endTime);
+                                tempTask.setIsRecurring(task.getIsRecurring());
+                                tempTask.setRecurrenceRule(task.getRecurrenceRule());
+                                tempTask.setEndDate(task.getEndDate());
+                                tempTask.setRepeatGap(task.getRepeatGap());
+                                tempTask.setNotificationNumber(task.getNotificationNumber());
+                                tempTask.setNotificationType(task.getNotificationType());
+                                tempTask.setCalendar(task.getCalendar());
+                                newTasks.add(tempTask);
+                            }
                         }
 
                     } catch (InvalidRecurrenceRuleException e) {
@@ -201,7 +201,7 @@ public class CalendarServiceImpl implements CalendarService{
         Optional<Calendar> calendarOptional = calendarRepository.findById(id);
         if (calendarOptional.isPresent()) {
             Calendar calendar = calendarOptional.get();
-         
+
             if (calendarDTO.getTitle() != null) {
                 calendar.setTitle(calendarDTO.getTitle());
             }
@@ -227,6 +227,20 @@ public class CalendarServiceImpl implements CalendarService{
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<Calendar> getCalendarInfo() {
+        User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());
+        List<Calendar> calendars = new ArrayList<>();
+        for (Calendar calendar : calendarRepository.findByUserId(user.getId())) {
+            Calendar tempCalendar = new Calendar();
+            tempCalendar.setId(calendar.getId());
+            tempCalendar.setTitle(calendar.getTitle());
+            tempCalendar.setColor(calendar.getColor());
+            calendars.add(tempCalendar);
+        }
+        return calendars;
     }
 
 }

@@ -11,10 +11,14 @@ public interface CalendarService {
     Calendar createCalendar(CalendarDTO calendarDTO);
 
     void deleteCalendar(long calendarId);
+
     List<Calendar> getUserCalendars(int year, int month, int day);
+
     List<Calendar> getCalendars(int year, int month, int day);
 
     Calendar updateCalendar(Long id, CalendarDTO calendarDTO);
 
     Calendar deleteCalendar(Long id);
+
+    List<Calendar> getCalendarInfo();
 }
