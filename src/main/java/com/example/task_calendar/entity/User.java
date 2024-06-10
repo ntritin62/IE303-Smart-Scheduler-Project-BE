@@ -26,7 +26,20 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
+    private List<SurveyTask> surveyTasks;
 
+    public void add(SurveyTask tempSurveyTask) {
+        if (surveyTasks == null) {
+            surveyTasks = new ArrayList<>();
+        }
+
+        surveyTasks.add(tempSurveyTask);
+
+        tempSurveyTask.setUser(this);
+    }
 
     @OneToMany(mappedBy = "user",
             fetch = FetchType.LAZY,
@@ -35,7 +48,7 @@ public class User {
     private List<Calendar> calendars;
 
     public void add(Calendar tempCalendar) {
-        if(calendars == null) {
+        if (calendars == null) {
             calendars = new ArrayList<>();
         }
 

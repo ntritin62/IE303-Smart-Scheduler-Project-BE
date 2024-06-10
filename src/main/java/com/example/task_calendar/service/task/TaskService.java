@@ -14,3 +14,4 @@ public interface TaskService {
 
     List<Task> createManyTasks(List<TaskDTO> taskDTOList);
 }
+
