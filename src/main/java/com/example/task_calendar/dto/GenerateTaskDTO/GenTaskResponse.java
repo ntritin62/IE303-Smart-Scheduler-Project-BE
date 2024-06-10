@@ -8,6 +8,8 @@ public record GenTaskResponse(
         Repeat repeat,
         String description,
         LocalDateTime startTime,
-        LocalDateTime endTime
+        LocalDateTime endTime,
+        boolean isRecurring,
+        Notification notification
 ) {
 }

@@ -17,6 +17,10 @@ public interface Assistant {
                         Don't response any additional text.
                     """
     )
-    @UserMessage("Predict {{title}} time for today")
-    LocalDateTime predictStartTime(@MemoryId Integer memoryId, @V("title") String title);
+    @UserMessage("Predict {{title}} time int date {{date}} {{existTimes}}")
+    LocalDateTime predictStartTime(@MemoryId String memoryId,
+                                   @V("title") String title,
+                                   @V("date") String date,
+                                   @V("existTimes") String existTimes);
+
 }
