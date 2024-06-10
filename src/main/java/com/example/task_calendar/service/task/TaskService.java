@@ -12,6 +12,8 @@ public interface TaskService {
 
     Task deleteTask(Long id);
 
+    Task updateTask(Long id, TaskDTO taskDTO);
+
     List<Task> createManyTasks(List<TaskDTO> taskDTOList);
 }
 

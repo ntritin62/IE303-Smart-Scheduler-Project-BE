@@ -84,6 +84,53 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Task updateTask(Long id, TaskDTO taskDTO) {
+        Optional<Task> taskOptional = taskRepository.findById(id);
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+
+            if (taskDTO.getTitle() != null) {
+                task.setTitle(taskDTO.getTitle());
+            }
+            if (taskDTO.getDescription() != null) {
+                task.setDescription(taskDTO.getDescription());
+            }
+            if (taskDTO.getEndTime() != null) {
+                LocalDateTime endTime = DateUtil.parseStringToLocalDateTime(taskDTO.getEndTime());
+                task.setEndTime(endTime);
+            }
+            if (taskDTO.getStartTime() != null) {
+                LocalDateTime startTime = DateUtil.parseStringToLocalDateTime(taskDTO.getStartTime());
+                task.setStartTime(startTime);
+            }
+            if (taskDTO.getIsRecurring() != null) {
+                task.setIsRecurring(taskDTO.getIsRecurring());
+                if (taskDTO.getIsRecurring()) {
+                    taskDTO.createRecurrenceRule();
+                    task.setRecurrenceRule(taskDTO.getRecurrenceRule());
+                    if (taskDTO.getRepeat().getEndDate() != null) {
+                        LocalDateTime endDate = DateUtil.parseStringToLocalDateTime(taskDTO.getRepeat().getEndDate());
+                        task.setEndDate(endDate);
+                    }
+                    task.setRepeatGap(taskDTO.getRepeat().getRepeatGap());
+                }
+            }
+            if (taskDTO.getNotification() != null) {
+                task.setNotificationNumber(taskDTO.getNotification().getNumber());
+                task.setNotificationType(taskDTO.getNotification().getType());
+            }
+
+
+            taskRepository.save(task);
+
+            return task;
+        } else {
+            return null;
+        }
+    }
+
+
+    @Override
     public List<Task> createManyTasks(List<TaskDTO> taskDTOList) {
         List<Task> taskList = new ArrayList<>();
         // Handle each task dto

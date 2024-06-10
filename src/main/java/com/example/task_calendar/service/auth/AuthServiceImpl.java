@@ -51,7 +51,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User getCurrentUser() {
-        User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());;
+        User user = userRepository.findFirstByEmail(userUtil.getCurrentUsername());
+    
         return user;
     }
 }

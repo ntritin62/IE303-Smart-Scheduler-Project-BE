@@ -33,6 +33,8 @@ public class TaskController {
         return ResponseHandler.responseBuilder("Created task successfully", HttpStatus.OK, task);
     }
 
+
+
     @DeleteMapping("/task/{id}")
     public ResponseEntity<?> deleteTask(@PathVariable Long id) {
         Task task  = taskService.deleteTask(id);
@@ -40,6 +42,15 @@ public class TaskController {
             throw new ApiRequestException("taskId doesn't exist.");
         }
         return ResponseHandler.responseBuilder("Deleted task with id= " + task.getId() + "successfully", HttpStatus.OK, null);
+    }
+
+    @PatchMapping("/task/{id}")
+    public ResponseEntity<?> updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        Task task  = taskService.updateTask(id, taskDTO);
+        if(task == null) {
+            throw new ApiRequestException("taskId doesn't exist.");
+        }
+        return ResponseHandler.responseBuilder("Updated task with id= " + task.getId() + "successfully", HttpStatus.OK, task);
     }
 
 

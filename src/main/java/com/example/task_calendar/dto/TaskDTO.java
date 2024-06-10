@@ -12,7 +12,7 @@ public class TaskDTO {
 
     @NotBlank(message = "Title cannot be blank")
     private String title;
-    @NotBlank(message = "Description cannot be blank")
+
     private String description;
     @NotBlank(message = "startTime cannot be blank")
     private String startTime;

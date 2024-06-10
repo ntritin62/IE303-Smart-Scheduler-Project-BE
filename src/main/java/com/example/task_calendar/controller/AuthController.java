@@ -86,6 +86,7 @@ public class AuthController {
 
     @GetMapping("/api/user")
     public ResponseEntity<?> getCurrentUser() {
+
         User user = authService.getCurrentUser();
         return ResponseHandler.responseBuilder("Get current user successfully", HttpStatus.OK, user);
     }

@@ -6,6 +6,7 @@ import com.example.task_calendar.entity.Task;
 import com.example.task_calendar.entity.User;
 import com.example.task_calendar.repository.CalendarRepository;
 import com.example.task_calendar.repository.UserRepository;
+import com.example.task_calendar.util.DateUtil;
 import com.example.task_calendar.util.UserUtil;
 import org.dmfs.jems2.Predicate;
 import org.dmfs.jems2.iterable.First;
@@ -193,6 +194,28 @@ public class CalendarServiceImpl implements CalendarService{
             tasks.addAll(newTasks);
         }
         return calendars;
+    }
+
+    @Override
+    public Calendar updateCalendar(Long id, CalendarDTO calendarDTO) {
+        Optional<Calendar> calendarOptional = calendarRepository.findById(id);
+        if (calendarOptional.isPresent()) {
+            Calendar calendar = calendarOptional.get();
+         
+            if (calendarDTO.getTitle() != null) {
+                calendar.setTitle(calendarDTO.getTitle());
+            }
+            if (calendarDTO.getColor() != null) {
+                calendar.setColor(calendarDTO.getColor());
+            }
+
+            calendarRepository.save(calendar);
+
+            return calendar;
+
+        } else {
+            return null;
+        }
     }
 
     @Override

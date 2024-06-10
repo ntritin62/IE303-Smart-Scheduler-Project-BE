@@ -2,6 +2,7 @@ package com.example.task_calendar.controller;
 
 import com.example.task_calendar.dto.CalendarDTO;
 import com.example.task_calendar.dto.SignUpDTO;
+import com.example.task_calendar.dto.TaskDTO;
 import com.example.task_calendar.dto.UserDTO;
 import com.example.task_calendar.entity.Calendar;
 import com.example.task_calendar.entity.Task;
@@ -49,6 +50,15 @@ public class CalendarController {
             throw new ApiRequestException("calendarID doesn't exist.");
         }
         return ResponseHandler.responseBuilder("Deleted calendar with id= " +calendar.getId() + " successfully", HttpStatus.OK, null);
+    }
+
+    @PatchMapping("/calendar/{id}")
+    public ResponseEntity<?> updateCalendar(@PathVariable Long id, @RequestBody  CalendarDTO calendarDTO) {
+        Calendar calendar  = calendarService.updateCalendar(id, calendarDTO);
+        if(calendar == null) {
+            throw new ApiRequestException("calendarID doesn't exist.");
+        }
+        return ResponseHandler.responseBuilder("Updated calendar with id= " +calendar.getId() + " successfully", HttpStatus.OK, null);
     }
 
     @GetMapping("/calendar/{type}/{year}/{month}/{day}")

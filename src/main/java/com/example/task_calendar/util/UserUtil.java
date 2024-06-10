@@ -18,6 +18,7 @@ public class UserUtil {
 
     public String getCurrentUsername() {
         UserDetails userDetails = getCurrentUserDetails();
+
         if (userDetails != null) {
             return userDetails.getUsername();
         }
