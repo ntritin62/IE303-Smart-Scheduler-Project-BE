@@ -34,4 +34,4 @@ This repository provide API running Smart Scheduler Application.
 5. Server is running at [here](http://localhost:8080)
 
 ## Usage
-1. When application is running, visit [here](http://localhost:8080/swagger-ui/index.html#) to see API document 
+When application is running, visit [here](http://localhost:8080/swagger-ui/index.html#) to see API document 
